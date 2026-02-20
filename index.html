@@ -124,7 +124,7 @@
 
         .main-layout { 
             display: flex; 
-            width: 98%; /* ここを100%近くに戻してPCでの広がりを確保 */
+            width: 98%; 
             max-width: 1600px;
             justify-content: center; 
             gap: 24px; 
@@ -181,7 +181,7 @@
         .pick-slot.filled { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); animation: slot-pop 0.4s var(--bounce-ease); }
         .pick-slot img { width: 50px; height: 50px; margin-right: 15px; object-fit: contain; }
 
-        .center-panel { flex: 1; min-width: 500px; } /* センターパネルが縮みすぎないように調整 */
+        .center-panel { flex: 1; min-width: 500px; }
         .pokemon-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
@@ -329,15 +329,12 @@
     function getSequence() {
         const p1 = firstTeam, p2 = (firstTeam === 'p' ? 'o' : 'p');
         return [
-            // --- BANフェーズ (交互に1人ずつ) ---
-            {t:p1, m:'B', i:0, time:15}, // 先攻 1枠目
-            {t:p2, m:'B', i:0, time:15}, // 後攻 1枠目
-            {t:p1, m:'B', i:1, time:15}, // 先攻 2枠目
-            {t:p2, m:'B', i:1, time:15}, // 後攻 2枠目
-            {t:p1, m:'B', i:2, time:15}, // 先攻 3枠目
-            {t:p2, m:'B', i:2, time:15}, // 後攻 3枠目
-
-            // --- PICKフェーズ ---
+            {t:p1, m:'B', i:0, time:15},
+            {t:p2, m:'B', i:0, time:15},
+            {t:p1, m:'B', i:1, time:15},
+            {t:p2, m:'B', i:1, time:15},
+            {t:p1, m:'B', i:2, time:15},
+            {t:p2, m:'B', i:2, time:15},
             {t:p1, m:'P', i:0, time:30}, 
             {t:p2, m:'P', i:0, time:30}, {t:p2, m:'P', i:1, time:0},
             {t:p1, m:'P', i:1, time:30}, {t:p1, m:'P', i:2, time:0},
@@ -370,7 +367,12 @@
     function handleSelect(name) {
         const step = getSequence()[turnIndex];
         if (!step || currentRoundUsed.has(name)) return;
-        if ((step.t === 'p' && usedP.has(name)) || (step.t === 'o' && usedO.has(name))) return;
+        
+        // --- 修正箇所：PICKのときだけ「過去に使ったポケモン」を制限する ---
+        if (step.m === 'P') {
+            if ((step.t === 'p' && usedP.has(name)) || (step.t === 'o' && usedO.has(name))) return;
+        }
+        // BANのときは過去の使用状況に関わらず選択可能
         
         if (step.m === 'B') {
             document.getElementById(`${step.t}-ban-${step.i}`).innerHTML = `<img src="img/${name}.png"><div class="ban-label">${name}</div>`;
