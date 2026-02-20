@@ -329,9 +329,17 @@
     function getSequence() {
         const p1 = firstTeam, p2 = (firstTeam === 'p' ? 'o' : 'p');
         return [
-            {t:p1, m:'B', i:0, time:15}, {t:p2, m:'B', i:0, time:15}, {t:p2, m:'B', i:1, time:15},
-            {t:p1, m:'B', i:1, time:15}, {t:p1, m:'B', i:2, time:15}, {t:p2, m:'B', i:2, time:15},
-            {t:p1, m:'P', i:0, time:30}, {t:p2, m:'P', i:0, time:30}, {t:p2, m:'P', i:1, time:0},
+            // --- BANフェーズ (交互に1人ずつ) ---
+            {t:p1, m:'B', i:0, time:15}, // 先攻 1枠目
+            {t:p2, m:'B', i:0, time:15}, // 後攻 1枠目
+            {t:p1, m:'B', i:1, time:15}, // 先攻 2枠目
+            {t:p2, m:'B', i:1, time:15}, // 後攻 2枠目
+            {t:p1, m:'B', i:2, time:15}, // 先攻 3枠目
+            {t:p2, m:'B', i:2, time:15}, // 後攻 3枠目
+
+            // --- PICKフェーズ ---
+            {t:p1, m:'P', i:0, time:30}, 
+            {t:p2, m:'P', i:0, time:30}, {t:p2, m:'P', i:1, time:0},
             {t:p1, m:'P', i:1, time:30}, {t:p1, m:'P', i:2, time:0},
             {t:p2, m:'P', i:2, time:30}, {t:p2, m:'P', i:3, time:0},
             {t:p1, m:'P', i:3, time:30}, {t:p1, m:'P', i:4, time:0},
